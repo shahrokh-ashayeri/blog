@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ثبت‌نام با شماره تلفن | وبلاگ خبری</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        font-family: 'Vazirmatn', sans-serif;
+        background: #f3f3f3;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        direction: rtl;
+      }
+      
+      .container {
+        background: white;
+        padding: 2rem 3rem;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        width: 350px;
+        max-width: 90vw;
+        text-align: center;
+      }
+      
+      h2 {
+        margin-bottom: 1.5rem;
+        color: #0d6efd;
+      }
+      
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      input[type='tel'],
+      input[type='text'] {
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        transition: border-color 0.3s;
+        font-family: 'Vazirmatn', sans-serif;
+      }
+      
+      input:focus {
+        border-color: #0d6efd;
+        outline: none;
+      }
+      
+      button {
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+        padding: 0.9rem;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      
+      button:hover {
+        background-color: #084298;
+      }
+      
+      .divider {
+        margin: 1.5rem 0;
+        position: relative;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #888;
+      }
+      
+      .divider::before,
+      .divider::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 40%;
+        height: 1px;
+        background: #ccc;
+      }
+      
+      .divider::before {
+        right: 0;
+      }
+      
+      .divider::after {
+        left: 0;
+      }
+      
+      .social-login {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      
+      .social-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.7rem;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-size: 0.95rem;
+        font-weight: bold;
+      }
+      
+      .social-button img {
+        width: 20px;
+        height: 20px;
+      }
+      
+      .social-button:hover {
+        background-color: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>ثبت‌نام با شماره تلفن</h2>
+      <form id="phone-form" action="{% url 'account:otp' %}" method="post" novalidate>
+        {% csrf_token %}
+        <input type="tel" name="phone" placeholder="شماره تلفن همراه" required />
+        <button type="submit">ارسال کد تأیید</button>
+      </form>
+
+      <div class="divider">یا ورود با</div>
+
+      <div class="social-login">
+        <div class="social-button google-btn" onclick="location.href='#'">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" />
+          ادامه با گوگل
+        </div>
+        <div class="social-button microsoft-btn" onclick="location.href='#'">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg" alt="Microsoft" />
+          ادامه با مایکروسافت
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

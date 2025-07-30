@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تأیید شماره تلفن | وبلاگ خبری</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: #f3f3f3;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      direction: rtl;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      max-width: 90vw;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 1.2rem;
+      color: #0d6efd;
+    }
+
+    p {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+
+    .otp-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .otp-inputs input {
+      width: 48px;
+      height: 60px;
+      text-align: center;
+      font-size: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      transition: border-color 0.3s;
+    }
+
+    .otp-inputs input:focus {
+      border-color: #0d6efd;
+      outline: none;
+    }
+
+    button {
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      padding: 0.9rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #084298;
+    }
+
+    .resend {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .resend a {
+      color: #0d6efd;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .resend a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>تأیید شماره تلفن</h2>
+    <p>کد تأیید ۵ رقمی به شماره شما ارسال شد.</p>
+    <form id="otp-form" method="post" action="#">
+      <div class="otp-inputs">
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required />
+      </div>
+      <button type="submit">تأیید</button>
+    </form>
+    <div class="resend">
+      کدی دریافت نکردید؟ <a href="#">ارسال مجدد</a>
+    </div>
+  </div>
+
+  <script>
+    // جابجایی خودکار بین فیلدها
+    const inputs = document.querySelectorAll(".otp-inputs input");
+    inputs.forEach((input, index) => {
+      input.addEventListener("input", () => {
+        if (input.value.length === 1 && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && input.value === "" && index > 0) {
+          inputs[index - 1].focus();
+        }
+      });
+    });
+
+    // در زمان ارسال فرم، مقدار تمام فیلدها با هم ترکیب می‌شن
+    document.getElementById("otp-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const code = Array.from(inputs).map(input => input.value).join("");
+      alert("کد وارد شده: " + code); // اینجا باید به بک‌اند ارسال بشه
+      // اینجا می‌تونی از fetch یا Ajax برای ارسال کد استفاده کنی
+    });
+  </script>
+</body>
+</html>

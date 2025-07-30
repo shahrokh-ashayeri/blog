@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'css/post_detail.css' %}" />
+{% endblock %}
+
+{% block content %}
+  <!-- محتوای خبر -->
+  <div class="container">
+    <section class="news-detail">
+      <h1>{{ post.title }}</h1>
+      <div class="meta">منتشر شده در ۴ خرداد ۱۴۰۴ | ۱۲۳۴ بازدید</div>
+      <p>{{ post.content }}</p>
+    </section>
+
+    <!-- نظرات -->
+    <section class="comments-section">
+      <h2>نظرات کاربران</h2>
+
+      {% if post.comments.count %}
+        <div class="comments-count">{{ post.comments.count }} نظر ثبت شده است.</div>
+        {% for comment in post.comments.all %}
+          <div class="comment">
+            <div class="author">{{ comment.author }}</div>
+            <div class="text">{{ comment.content }}</div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="comments-count">هیچ نظری ثبت نشده است.</div>
+      {% endif %}
+
+      <!-- فرم ارسال نظر -->
+      {% if user.is_authenticated %}
+        <form class="comment-form">
+          <textarea placeholder="نظر خود را بنویسید..."></textarea>
+          <button type="submit">ارسال نظر</button>
+        </form>
+      {% else %}
+        <p>برای ثبت نظر باید وارد سایت شوید</p>
+      {% endif %}
+    </section>
+  </div>
+{% endblock %}

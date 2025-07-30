@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <!-- لیست خبرها -->
+    <section class="news-grid">
+      {% for post in posts %}
+        <article class="news-card">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="خبر اول" />
+          <div class="content">
+            {% comment %} <a href="{% url 'post:post_detail' year=post.published_time.year month=post.published_time.month day=post.published_time.day slug=post.slug %}"><h3>{{ post.title }}</h3></a> {% endcomment %}
+            <a href="{{ post.get_absolute_url }}"><h3>{{ post.title }}</h3></a>
+            <p>{{ post.content|truncatewords:30 }}</p>
+            <div class="views">بازدید: ۴۵۳۲ بار</div>
+            <a href="news-detail.html">ادامه مطلب...</a>
+          </div>
+        </article>
+      {% endfor %}
+    </section>
+  </div>
+
+  {% include 'inc/pagination.html' with page=page_obj %}
+{% endblock %}
+
+

@@ -1,0 +1,5 @@
+<nav>
+  {% for category in categories %}
+    <a href="{% url 'post:post_list' %}">{{ category.name }}</a>
+  {% endfor %}
+</nav>
