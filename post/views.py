@@ -32,7 +32,11 @@ class PostListView(ListView):
         return context
 
     def get_queryset(self):
-        return Post.objects.all()
+        if self.request.GET.get('category'):
+            category_slug = self.request.GET.get('category')
+            return Post.published.filter(category__slug=category_slug)
+        else:
+            return Post.published.all()
 
 def post_detail(request, year, month, day, slug):
     post = get_object_or_404(
