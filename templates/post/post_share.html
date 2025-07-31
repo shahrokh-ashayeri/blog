@@ -4,6 +4,7 @@
   <div class="container">
     <div class="col">
       <h1>اشتراک گذاری مقاله</h1>
+      <div><a href="{{telegram_share_url}}">Share on Telegram</a></div>
       {% if form.errors %}
         <div class="alert alert-danger">
           {% for field in form %}
@@ -13,35 +14,27 @@
                 <li>{{ err }}</li>
               {% endfor %}
             {% endif %}
-          {% endfor%}
+          {% endfor %}
         </div>
       {% endif %}
       <p>{{ post.title }}</p>
       <form action="" class="form" novalidate method="post">
         {% csrf_token %}
         <div class="mb-3 row">
-          <label for="staticEmail" class="col-sm-2 col-form-label">{{ form.name.label}}</label>
-          <div class="col-sm-10">
-            {{ form.name}}
-          </div>
+          <label for="staticEmail" class="col-sm-2 col-form-label">{{ form.name.label }}</label>
+          <div class="col-sm-10">{{ form.name }}</div>
         </div>
         <div class="mb-3 row">
           <label for="inputPassword" class="col-sm-2 col-form-label">{{ form.email.label }}</label>
-          <div class="col-sm-10">
-            {{ form.email }}
-          </div>
+          <div class="col-sm-10">{{ form.email }}</div>
         </div>
         <div class="mb-3 row">
           <label for="inputPassword" class="col-sm-2 col-form-label">{{ form.to.label }}</label>
-          <div class="col-sm-10">
-            {{ form.to}}
-          </div>
+          <div class="col-sm-10">{{ form.to }}</div>
         </div>
         <div class="mb-3 row">
           <label for="inputPassword" class="col-sm-2 col-form-label">{{ form.text.label }}</label>
-          <div class="col-sm-10">
-            {{ form.text}}
-          </div>
+          <div class="col-sm-10">{{ form.text }}</div>
         </div>
         <button type="submit" class="btn btn-primary">اشتراک</button>
       </form>

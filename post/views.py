@@ -64,4 +64,6 @@ def post_share(request):
         post_id = request.GET.get('post_id')
         
         post = Post.objects.get(id=post_id)
-        return render(request, "post/post_share.html", {"form": form, "post": post})      
+        post_url = request.build_absolute_uri(post.get_absolute_url())
+        telegram_share_url = f"https://t.me/share/url?url={post_url}&text=Check this post!"
+        return render(request, "post/post_share.html", {"form": form, "post": post, 'telegram_share_url': telegram_share_url})      
