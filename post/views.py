@@ -4,6 +4,7 @@ from .forms import CommentForm, ShareForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.contrib import messages
+import urllib.parse
 
 # def post_list(request):
 #     posts_list = Post.objects.all()
@@ -65,5 +66,6 @@ def post_share(request):
         
         post = Post.objects.get(id=post_id)
         post_url = request.build_absolute_uri(post.get_absolute_url())
-        telegram_share_url = f"https://t.me/share/url?url={post_url}&text=Check this post!"
-        return render(request, "post/post_share.html", {"form": form, "post": post, 'telegram_share_url': telegram_share_url})      
+        telegram_share_url = f"https://t.me/share/url?url={post_url}&text=لطفا این پست رو مشاهده کنید"
+        whatsapp_share_url = f"https://api.whatsapp.com/send?text={urllib.parse.quote(post_url)}"
+        return render(request, "post/post_share.html", {"form": form, "post": post, 'telegram_share_url': telegram_share_url, 'whatsapp_share_url': whatsapp_share_url})      
