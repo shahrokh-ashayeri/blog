@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import Config, RepositoryEnv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -169,3 +170,13 @@ SOCIAL_AUTH_GOOGLE_CLIENT_ID = (
     "646446411513-jdpvok707jruq55h8p3ni28n3fcsl0fi.apps.googleusercontent.com"
 )
 SOCIAL_AUTH_GOOGLE_SECRET = "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"
+
+
+config = Config(RepositoryEnv(BASE_DIR / ".en"))
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")   

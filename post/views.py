@@ -5,6 +5,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.contrib import messages
 import urllib.parse
+from django.core.mail import send_mail
 
 # def post_list(request):
 #     posts_list = Post.objects.all()
@@ -16,7 +17,7 @@ import urllib.parse
 #         posts = paginator.page(paginator.num_pages)
 #     except PageNotAnInteger:
 #         posts = paginator.page(1)
-        
+
 #     categories = Category.objects.all()
 #     # return render(request, "post/post_list.html", {"posts": posts, 'categories': categories})
 #     return render(request, "post/post_list.html", {"posts": posts, 'categories': categories})
@@ -30,15 +31,16 @@ class PostListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
+        context["categories"] = Category.objects.all()
         return context
 
     def get_queryset(self):
-        if self.request.GET.get('category'):
-            category_slug = self.request.GET.get('category')
+        if self.request.GET.get("category"):
+            category_slug = self.request.GET.get("category")
             return Post.published.filter(category__slug=category_slug)
         else:
             return Post.published.all()
+
 
 def post_detail(request, year, month, day, slug):
     post = get_object_or_404(
@@ -49,23 +51,48 @@ def post_detail(request, year, month, day, slug):
         slug=slug,
     )
 
-    return render(request, "post/post_detail.html", {"post": post, 'form': CommentForm()})
+    return render(
+        request, "post/post_detail.html", {"post": post, "form": CommentForm()}
+    )
+
 
 def post_share(request):
+    post_id = request.GET.get("post_id")
+    post = Post.objects.get(id=post_id)
+    post_url = request.build_absolute_uri(post.get_absolute_url())
+
     if request.method == "POST":
         form = ShareForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            # send mail
-            messages.add_message(request, messages.SUCCESS ,'مقاله با موفقیت به اشتراک گذاشته شد')
+            subject = f"{cd['name']} ({cd['email']}) wants to share {cd['to']}"
+            message = f"Message: {cd['text']}\n\nLink: {post_url}"
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=None,
+                recipient_list=[cd["to"]],
+            )
+            messages.add_message(
+                request, messages.SUCCESS, "مقاله با موفقیت به اشتراک گذاشته شد"
+            )
         # else:
         return render(request, "post/post_share.html", {"form": form})
-    else:
-        form = ShareForm()
-        post_id = request.GET.get('post_id')
-        
-        post = Post.objects.get(id=post_id)
-        post_url = request.build_absolute_uri(post.get_absolute_url())
-        telegram_share_url = f"https://t.me/share/url?url={post_url}&text=لطفا این پست رو مشاهده کنید"
-        whatsapp_share_url = f"https://api.whatsapp.com/send?text={urllib.parse.quote(post_url)}"
-        return render(request, "post/post_share.html", {"form": form, "post": post, 'telegram_share_url': telegram_share_url, 'whatsapp_share_url': whatsapp_share_url})      
+
+    form = ShareForm()
+    telegram_share_url = (
+        f"https://t.me/share/url?url={post_url}&text=لطفا این پست رو مشاهده کنید"
+    )
+    whatsapp_share_url = (
+        f"https://api.whatsapp.com/send?text={urllib.parse.quote(post_url)}"
+    )
+    return render(
+        request,
+        "post/post_share.html",
+        {
+            "form": form,
+            "post": post,
+            "telegram_share_url": telegram_share_url,
+            "whatsapp_share_url": whatsapp_share_url,
+        },
+    )
