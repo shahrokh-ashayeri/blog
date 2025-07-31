@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Post, Category
-from .forms import CommentForm
+from .forms import CommentForm, ShareForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
+from django.contrib import messages
 
 # def post_list(request):
 #     posts_list = Post.objects.all()
@@ -48,3 +49,19 @@ def post_detail(request, year, month, day, slug):
     )
 
     return render(request, "post/post_detail.html", {"post": post, 'form': CommentForm()})
+
+def post_share(request):
+    if request.method == "POST":
+        form = ShareForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            # send mail
+            messages.add_message(request, messages.SUCCESS ,'مقاله با موفقیت به اشتراک گذاشته شد')
+        # else:
+        return render(request, "post/post_share.html", {"form": form})
+    else:
+        form = ShareForm()
+        post_id = request.GET.get('post_id')
+        
+        post = Post.objects.get(id=post_id)
+        return render(request, "post/post_share.html", {"form": form, "post": post})      
