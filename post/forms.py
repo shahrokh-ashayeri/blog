@@ -7,30 +7,39 @@ from django import forms
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ["content"]
+        fields = ["name", "email", "body"]
         widgets = {
-            "content": Textarea(
+            "body": Textarea(
                 attrs={"rows": 4, "placeholder": "نظر خود را اینجا بنویسید..."}
-            )
+            ),
+            "name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "نام شما"}
+            ),
+            "email": forms.EmailInput(
+                attrs={"class": "form-control", "placeholder": "ایمیل شما"}
+            ),
         }
-        labels = {"content": "نظر:"}
+        labe0ls = {"name": "نام شما:", "email": "ایمیل:", "body": "نظر شما:"}
 
 
 class ShareForm(forms.Form):
     name = forms.CharField(
         widget=forms.TextInput(
             attrs={"class": "form-control", "placeholder": "نام شما"}
-        ), label="نام شما"
+        ),
+        label="نام شما",
     )
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={"class": "form-control", "placeholder": "ایمیل شما"}
-        ), label='ایمیل شما'
+        ),
+        label="ایمیل شما",
     )
     to = forms.EmailField(
         widget=forms.EmailInput(
             attrs={"class": "form-control", "placeholder": "ایمیل گیرنده"}
-        ), label='ایمیل گیرنده'
+        ),
+        label="ایمیل گیرنده",
     )
     text = forms.CharField(
         required=False,
@@ -40,5 +49,6 @@ class ShareForm(forms.Form):
                 "placeholder": "متن پیام (اختیاری)",
                 "rows": 4,
             }
-        ),label='متن پیام (اختیاری)'
+        ),
+        label="متن پیام (اختیاری)",
     )

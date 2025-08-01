@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if comment %}
+        <h2>نظر شما ثبت شد</h2>
+        <a href="{{ post.get_absolute_url }}">بازگشت به مقاله مورد نظر</a>
+    {% else %}
+        <h2>خطا در ثبت نظر</h2>
+        <p>لطفا دوباره تلاش کنید.</p>
+    {% endif %}
+{% endblock%}

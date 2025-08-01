@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Post, Category
 from .forms import CommentForm, ShareForm
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+# from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.contrib import messages
 import urllib.parse
 from django.core.mail import send_mail
+from django.views.decorators.http import require_POST
+
 
 # def post_list(request):
 #     posts_list = Post.objects.all()
@@ -50,9 +52,11 @@ def post_detail(request, year, month, day, slug):
         published_time__day=day,
         slug=slug,
     )
+    
+    comments = post.comments.filter(active=True)
 
     return render(
-        request, "post/post_detail.html", {"post": post, "form": CommentForm()}
+        request, "post/post_detail.html", {"post": post, "comment_form": CommentForm(), "comments": comments}
     )
 
 
@@ -96,3 +100,21 @@ def post_share(request):
             "whatsapp_share_url": whatsapp_share_url,
         },
     )
+
+@require_POST
+def post_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comment_form = CommentForm(data=request.POST)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.post = post
+        comment.save()
+        messages.add_message(
+            request, messages.SUCCESS, "نظر شما با موفقیت ثبت شد"
+        )
+        
+    else:
+        messages.add_message(
+            request, messages.ERROR, "خطا در ثبت نظر. لطفا دوباره تلاش کنید."
+        )
+    return render(request, 'post/comment.html', {'form':comment_form, 'post': post, 'comment': comment})

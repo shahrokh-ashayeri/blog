@@ -4,8 +4,12 @@
   <div class="container">
     <div class="col">
       <h1>اشتراک گذاری مقاله</h1>
-      <div><a href="{{telegram_share_url}}" target="_blank">Share on Telegram</a></div>
-      <div><a href="{{whatsapp_share_url}}" target="_blank">Share on Whatsapp</a></div>
+      <div>
+        <a href="{{ telegram_share_url }}" target="_blank">Share on Telegram</a>
+      </div>
+      <div>
+        <a href="{{ whatsapp_share_url }}" target="_blank">Share on Whatsapp</a>
+      </div>
       {% if form.errors %}
         <div class="alert alert-danger">
           {% for field in form %}

@@ -7,6 +7,7 @@ class PublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status="published")
 
+
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True, allow_unicode=True)
@@ -48,10 +49,17 @@ class Post(models.Model):
         ],
         default="draft",
     )
-    
+
     def get_absolute_url(self):
-        return reverse("post:post_detail", kwargs={"year":self.published_time.year, "month":self.published_time.month, "day":self.published_time.day, "slug":self.slug})
-    
+        return reverse(
+            "post:post_detail",
+            kwargs={
+                "year": self.published_time.year,
+                "month": self.published_time.month,
+                "day": self.published_time.day,
+                "slug": self.slug,
+            },
+        )
 
     def __str__(self):
         return self.title
@@ -67,18 +75,20 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
-    author = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, related_name="comments"
-    )
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    approved = models.BooleanField(default=False)
+    name = models.CharField(max_length=80)
+    email = models.EmailField(null=True, blank=False)
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"Comment by {self.author} on {self.post.title}"
+        return f"Comment by {self.name} on {self.post}"
 
     class Meta:
-        ordering = ["-created_at"]  # Newest comments first
+        ordering = ["-created"]  # Newest comments first
         verbose_name = "Comment"
         verbose_name_plural = "Comments"
+        indexes = [
+            models.Index(fields=["-created"]),
+        ]
