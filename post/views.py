@@ -52,11 +52,11 @@ def post_detail(request, year, month, day, slug):
         published_time__day=day,
         slug=slug,
     )
-    
+    categories = Category.objects.all()
     comments = post.comments.filter(active=True)
 
     return render(
-        request, "post/post_detail.html", {"post": post, "comment_form": CommentForm(), "comments": comments}
+        request, "post/post_detail.html", {"categories": categories, "post": post, "comment_form": CommentForm(), "comments": comments}
     )
 
 
