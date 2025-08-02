@@ -13,7 +13,7 @@
       <h1>{{ post.title }}</h1>
       <div class="meta">منتشر شده در ۴ خرداد ۱۴۰۴ | ۱۲۳۴ بازدید</div>
       <div>
-        <a href="{% url 'post:post_share' %}?post_id={{ post.id }}">اشتراک گذاری</a>
+        <a href="{% url 'post:post_share' post.slug post.id %}">اشتراک گذاری</a>
       </div>
       <p>{{ post.content }}</p>
     </section>

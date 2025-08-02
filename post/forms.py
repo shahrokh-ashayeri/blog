@@ -9,8 +9,8 @@ class CommentForm(ModelForm):
         model = Comment
         fields = ["name", "email", "body"]
         widgets = {
-            "body": Textarea(
-                attrs={"rows": 4, "placeholder": "نظر خود را اینجا بنویسید..."}
+            "body": forms.Textarea(
+                attrs={"class":"form-control", "rows": 4, "placeholder": "نظر خود را اینجا بنویسید..."}
             ),
             "name": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "نام شما"}
@@ -19,7 +19,7 @@ class CommentForm(ModelForm):
                 attrs={"class": "form-control", "placeholder": "ایمیل شما"}
             ),
         }
-        labe0ls = {"name": "نام شما:", "email": "ایمیل:", "body": "نظر شما:"}
+        labels = {"name": "نام شما:", "email": "ایمیل:", "body": "نظر شما:"}
 
 
 class ShareForm(forms.Form):

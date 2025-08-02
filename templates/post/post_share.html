@@ -23,7 +23,7 @@
         </div>
       {% endif %}
       <p>{{ post.title }}</p>
-      <form action="" class="form" novalidate method="post">
+      <form action="{% url 'post:post_share' post.slug post.id %}" class="form" novalidate method="post">
         {% csrf_token %}
         <div class="mb-3 row">
           <label for="staticEmail" class="col-sm-2 col-form-label">{{ form.name.label }}</label>
