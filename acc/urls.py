@@ -1,3 +1,7 @@
+"""
+Account app URL file
+"""
+
 from django.urls import path
 from .views import login_view, register_view, otp_view, logout_view
 

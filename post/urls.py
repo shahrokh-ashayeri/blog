@@ -1,6 +1,10 @@
+"""
+Post app URL file
+"""
+
 from django.urls import path
 from . import views
-# This is the URL configuration for the 'post' app.
+
 
 app_name = 'post'
 urlpatterns = [

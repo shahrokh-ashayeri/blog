@@ -1,3 +1,7 @@
+"""
+API app URL file
+"""
+
 from django.urls import path
 from .views import posts_index
 
