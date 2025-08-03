@@ -1,4 +1,5 @@
 import urllib.parse
+from taggit.models import Tag
 from .models import Post, Category
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -6,6 +7,7 @@ from .forms import CommentForm, ShareForm
 from django.views.generic import ListView
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, get_object_or_404
+
 # from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
@@ -30,21 +32,35 @@ class PostListView(ListView):
     template_name = "post/post_list.html"
     context_object_name = "posts"
     paginate_by = 6
-    #paginate variable is 'page_obj' by default
+    # paginate variable is 'page_obj' by default
 
     def get_context_data(self, **kwargs):
         # Any data intended for the template should be included in the context variable, as follows
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
+        category_filter = self.request.GET.get('category')
+        posts = self.get_queryset()
+        
+        if category_filter:
+            category = get_object_or_404(Category, slug=category_filter)
+            posts = posts.filter(category__in=[category])
+        
+        tag_slug = self.kwargs.get("tag_slug")
+    
+        if tag_slug:
+            tag = Tag.objects.filter(slug=tag_slug).first()
+            if tag:
+                context['tag'] = tag
+                posts = posts.filter(tags__in = [tag])
+            else:
+                messages.add_message(self.request, messages.WARNING, "برچسب مورد نظر یافت نشد")
+        
+        context['posts'] = posts
+            
         return context
 
     def get_queryset(self):
-        # This class sends this data to the template when no filter is specified
-        if self.request.GET.get("category"):
-            category_slug = self.request.GET.get("category")
-            return Post.published.filter(category__slug=category_slug)
-        else:
-            return Post.published.all()
+        return Post.published.all()
 
 
 def post_detail(request, year, month, day, slug):
@@ -56,12 +72,19 @@ def post_detail(request, year, month, day, slug):
         slug=slug,
     )
     categories = Category.objects.all()
-    
+
     # retrieve active comments for the post
     comments = post.comments.filter(active=True)
 
     return render(
-        request, "post/post_detail.html", {"categories": categories, "post": post, "comment_form": CommentForm(), "comments": comments}
+        request,
+        "post/post_detail.html",
+        {
+            "categories": categories,
+            "post": post,
+            "comment_form": CommentForm(),
+            "comments": comments,
+        },
     )
 
 
@@ -86,7 +109,7 @@ def post_share(request, post_slug, post_id):
                 request, messages.SUCCESS, "مقاله با موفقیت به اشتراک گذاشته شد"
             )
         # else:
-        return render(request, "post/post_detail.html", {'post': post})
+        return render(request, "post/post_detail.html", {"post": post})
 
     form = ShareForm()
     telegram_share_url = (
@@ -116,14 +139,19 @@ def post_comment(request, post_id):
         comment = comment_form.save(commit=False)
         comment.post = post
         comment.save()
-        messages.add_message(
-            request, messages.SUCCESS, "نظر شما با موفقیت ثبت شد"
+        messages.add_message(request, messages.SUCCESS, "نظر شما با موفقیت ثبت شد")
+        return render(
+            request,
+            "post/comment.html",
+            {"form": comment_form, "post": post, "comment": comment},
         )
-        return render(request, 'post/comment.html', {'form':comment_form, 'post': post, 'comment': comment})
-        
-    
+
     messages.add_message(
         request, messages.ERROR, "خطا در ثبت نظر. لطفا دوباره تلاش کنید."
     )
-    
-    return render(request, 'post/comment.html', {'form':comment_form, 'post': post, 'form': comment_form})
+
+    return render(
+        request,
+        "post/comment.html",
+        {"form": comment_form, "post": post, "form": comment_form},
+    )

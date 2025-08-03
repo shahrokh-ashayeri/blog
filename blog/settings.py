@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",  # For human-readable time format
+    "taggit",
     "post.apps.PostConfig",
     "acc.apps.AccConfig",
     "django.contrib.sites",  # Required for allauth
@@ -72,8 +73,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
-
-
 
 
 ROOT_URLCONF = "blog.urls"
@@ -179,4 +178,4 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")   
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")

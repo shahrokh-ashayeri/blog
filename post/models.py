@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 
 class PublishedManager(models.Manager):
@@ -38,6 +39,7 @@ class Post(models.Model):
     author = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name="posts"
     )
+    tags = TaggableManager() 
     objects = models.Manager()
     published = PublishedManager()
     status = models.CharField(
