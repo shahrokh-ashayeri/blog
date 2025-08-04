@@ -1,5 +1,6 @@
 import urllib.parse
 from taggit.models import Tag
+from django.db.models import Count
 from .models import Post, Category
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -72,7 +73,9 @@ def post_detail(request, year, month, day, slug):
         slug=slug,
     )
     categories = Category.objects.all()
-
+    post_tags_id = post.tags.values_list('id', flat=True)
+    similar_posts = Post.published.filter(tags__in=post_tags_id).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by("-same_tags", "-published_time")[:4]
     # retrieve active comments for the post
     comments = post.comments.filter(active=True)
 
@@ -84,6 +87,7 @@ def post_detail(request, year, month, day, slug):
             "post": post,
             "comment_form": CommentForm(),
             "comments": comments,
+            "similar_posts": similar_posts,
         },
     )
 

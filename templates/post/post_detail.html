@@ -18,6 +18,17 @@
       <p>{{ post.content }}</p>
     </section>
 
+    <section class="row">
+      <h2>پست های مشابه</h2>
+      {% for similar_post in similar_posts %}
+        <p class="">
+          <a href="{{ similar_post.get_absolute_url }}">{{ similar_post.title }}</a>
+        </p>
+      {% empty %}
+        <p>پست مشابهی وجود ندارد</p>
+      {% endfor %}
+    </section>
+
     <!-- نظرات -->
     <section class="comments-section">
       <h2>نظرات کاربران</h2>
@@ -26,7 +37,7 @@
         <div class="comments-count">{{ comments.count }} نظر ثبت شده است.</div>
         {% for comment in comments %}
           <div class="comment">
-            <div class="author"> نظر{{ forloop.counter }} توسط {{ comment.name }} در تاریخ {{ comment.created }}</div>
+            <div class="author">نظر{{ forloop.counter }} توسط {{ comment.name }} در تاریخ {{ comment.created }}</div>
             <div class="text">{{ comment.body|linebreaks }}</div>
           </div>
         {% endfor %}
