@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load blog_tags %}
 
 {% load static %}
 
@@ -15,7 +16,7 @@
       <div>
         <a href="{% url 'post:post_share' post.slug post.id %}">اشتراک گذاری</a>
       </div>
-      <p>{{ post.content }}</p>
+      <p>{{ post.content|markdown }}</p>
     </section>
 
     <section class="row">
