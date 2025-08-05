@@ -72,6 +72,15 @@
         <div class="col-3">
           <h3>آخرین مقالات</h3>
           {% show_latest_posts %}
+          <h3>بیشترین نظرات</h3>
+          {% get_most_commented_posts as most_commented_posts %}
+          <ul class="list-unstyled">
+            {% for post in most_commented_posts %}
+              <li>
+                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                <span class="badge bg-secondary">{{ post.comments.count }} نظر</span>
+              </li>
+            {% endfor %}
         </div>
       </div>
     </div>
